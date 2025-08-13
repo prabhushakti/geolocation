@@ -12,6 +12,7 @@ jobs:
           run: |
               npm install @salesforce/cli --location=global
               sf --version
+              echo "${{ secrets.USERNAME }}"
               ls -lh
         
         - name: Checkout source code
