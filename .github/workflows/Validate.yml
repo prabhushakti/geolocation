@@ -19,7 +19,7 @@ jobs:
           run: |
             sf org login jwt --username ${{ secrets.USERNAME }}--client-ID ${{ secrets.CLIENTID }} --jwt-key-file salesforce.key -a orgName -d
                 
-        - name: Validate Deployment
+        - name: Validate Deployments
           run: |
             if [ -f destructiveChanges.xml ]; then
               echo "Destructive changes file found. Starting destrcutive deployment."
