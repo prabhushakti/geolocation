@@ -1,0 +1,37 @@
+name: Deployment
+on:
+  pull_request_review:
+    types: [submitted]
+jobs:
+    Deploy_Project:
+      if: github.event.review.state == 'approved'
+      name: Deploying Code to ORG
+      runs-on: ubuntu-latest
+      steps:
+        - name: Install Salesforce CLI
+          run: |
+                  npm install @salesforce/cli --location=global
+                  sf --version
+        
+        - name: Checkout source code
+          uses: actions/checkout@v4
+        
+        - name: Authenticate Dev Hub
+          run: |
+            ls  
+            sf org login jwt --username ${{ secrets.username }}--client-ID ${{ secrets.clientID }} --jwt-key-file ${{ secrets.key }} -a orgName -d
+                
+        - name: Run Destrcutive Deployment, if required
+          run: |
+                if [ -f destructiveChanges.xml ]; then
+                  echo "Destructive changes file found. Starting destrcutive deployment."
+                  sfdx force:source:deploy -p destructiveChanges.xml -u yourOrgAlias 
+                else
+                  echo "No destructive changes file found. Deploying non-destructively."
+                  sf project deploy start --manifest package.xml
+                fi
+
+        - name: Verify Deployment
+          run: sf project deploy status
+        
+

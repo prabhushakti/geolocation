@@ -1,0 +1,34 @@
+name: Validaton
+on:
+  pull_request:
+    types: [opened]
+jobs:
+    Validate_Deployment:
+      name: Dry Run Deploying Code to ORG
+      runs-on: ubuntu-latest
+      steps:
+        - name: Install Salesforce CLI
+          run: |
+            npm install @salesforce/cli --location=global
+            sf --version
+        
+        - name: Checkout source code
+          uses: actions/checkout@v4
+        
+        - name: Authenticate to ORG
+          run: |
+            sf org login jwt --username ${{ secrets.username }}--client-ID ${{ secrets.clientID }} --jwt-key-file ${{ secrets.key }} -a orgName -d
+                
+        - name: Validate Deployment
+          run: |
+            if [ -f destructiveChanges.xml ]; then
+              echo "Destructive changes file found. Starting destrcutive deployment."
+              sfdx force:source:deploy -p destructiveChanges.xml --checkonly -u yourOrgAlias
+              sfdx force:source:manifest:create --sourcepath force-app --manifestname manifest/deployPackage
+              sfdx force:source:deploy --manifest manifest/deployPackage.xml --predestructivechanges manifest/destructiveChangesPre.xml --postdestructivechanges manifest/destructiveChangesPost.xml
+            else
+              echo "No destructive changes file found. Skipping validation."
+            fi
+
+        
+
