@@ -10,18 +10,18 @@ jobs:
       steps:
         - name: Install Salesforce CLI
           run: |
-                  npm install @salesforce/cli --location=global
-                  sf --version
+              npm install @salesforce/cli --location=global
+              sf --version
         
         - name: Checkout source code
           uses: actions/checkout@v4
         
-        - name: Authenticate Dev Hub
+        - name: Authenticate to ORG
           run: |
             ls  
-            sf org login jwt --username ${{ secrets.username }}--client-ID ${{ secrets.clientID }} --jwt-key-file ${{ secrets.key }} -a orgName -d
+            sf org login jwt --username ${{ secrets.USERNAME }}--client-ID ${{ secrets.clientID }} --jwt-key-file salesforce.key -a orgName -d
                 
-        - name: Run Destrcutive Deployment, if required
+        - name: Run Deployment
           run: |
                 if [ -f destructiveChanges.xml ]; then
                   echo "Destructive changes file found. Starting destrcutive deployment."
