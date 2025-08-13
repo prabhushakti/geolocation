@@ -18,7 +18,7 @@ jobs:
         
         - name: Authenticate to ORG
           run: |
-            ls  
+            ls -a  
             sf org login jwt --username ${{ secrets.USERNAME }}--client-ID ${{ secrets.clientID }} --jwt-key-file salesforce.key -a orgName -d
                 
         - name: Run Deployment
