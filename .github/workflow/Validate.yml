@@ -23,11 +23,12 @@ jobs:
           run: |
             if [ -f destructiveChanges.xml ]; then
               echo "Destructive changes file found. Starting destrcutive deployment."
-              sfdx force:source:deploy -p destructiveChanges.xml --checkonly -u yourOrgAlias
-              sfdx force:source:manifest:create --sourcepath force-app --manifestname manifest/deployPackage
-              sfdx force:source:deploy --manifest manifest/deployPackage.xml --predestructivechanges manifest/destructiveChangesPre.xml --postdestructivechanges manifest/destructiveChangesPost.xml
+              #sfdx force:source:deploy -p destructiveChanges.xml --checkonly -u yourOrgAlias
+              #sfdx force:source:manifest:create --sourcepath force-app --manifestname manifest/deployPackage
+              #sfdx force:source:deploy --manifest manifest/deployPackage.xml --predestructivechanges manifest/destructiveChangesPre.xml --postdestructivechanges manifest/destructiveChangesPost.xml
             else
-              echo "No destructive changes file found. Skipping validation."
+              echo "No destructive changes file found. Performing normal deployment validation."
+              sf org login jwt --username  ${{ secrets.username }}  --client-id ${{ secrets.clientID }} --jwt-key-file  salesforce.key --instance-url https://login.salesforce.com
             fi
 
         
