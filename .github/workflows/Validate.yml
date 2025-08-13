@@ -9,9 +9,11 @@ jobs:
       steps:
         - name: Install Salesforce CLI
           run: |
+            npm install -g npm@latest
             npm install @salesforce/cli --location=global
+            sf update stable
             sf --version
-        
+            
         - name: Checkout source code
           uses: actions/checkout@v4
         
