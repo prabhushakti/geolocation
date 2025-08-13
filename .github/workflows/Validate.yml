@@ -28,6 +28,7 @@ jobs:
               #sfdx force:source:deploy --manifest manifest/deployPackage.xml --predestructivechanges manifest/destructiveChangesPre.xml --postdestructivechanges manifest/destructiveChangesPost.xml
             else
               echo "Performing normal deployment validation."
+              sf org list --all
               sf project deploy start -o test-9iaousfd98o0@example.com  --source-dir force-app  --concise --dry-run
             fi
 
