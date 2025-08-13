@@ -17,8 +17,8 @@ jobs:
         
         - name: Authenticate to ORG
           run: |
-            sf org login jwt --username ${{ secrets.USERNAME }} --client-ID ${{ secrets.CLIENTID }} --jwt-key-file salesforce.key -a orgName -d
-                
+             sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.clientID }} --jwt-key-file  salesforce.key --instance-url https://login.salesforce.com
+         
         - name: Validate Deployments
           run: |
             if [ -f destructiveChanges.xml ]; then
