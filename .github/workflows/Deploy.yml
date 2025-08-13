@@ -12,6 +12,7 @@ jobs:
           run: |
               npm install @salesforce/cli --location=global
               sf --version
+              ls -lh
         
         - name: Checkout source code
           uses: actions/checkout@v4
