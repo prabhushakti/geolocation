@@ -18,6 +18,7 @@ jobs:
         - name: Authenticate to ORG
           run: |
              sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.clientID }} --jwt-key-file  salesforce.key --instance-url https://login.salesforce.com
+             sf org list --all
          
         - name: Validate Deployments
           run: |
@@ -28,8 +29,7 @@ jobs:
               #sfdx force:source:deploy --manifest manifest/deployPackage.xml --predestructivechanges manifest/destructiveChangesPre.xml --postdestructivechanges manifest/destructiveChangesPost.xml
             else
               echo "Performing normal deployment validation."
-              sf org list --all
-              sf project deploy start -o test-9iaousfd98o0@example.com  --source-dir force-app  --concise --dry-run
+              sf project deploy start -o DevHub --source-dir force-app  --concise --dry-run
             fi
 
         
