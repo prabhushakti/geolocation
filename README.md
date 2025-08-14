@@ -1,3 +1,16 @@
+# How destructive changes are deployed through pull requests
+0) active lightning pages (custom object/components) cannot be deleted; 
+1) Developer must create destructiveChanges.xml file for objects to delete; and update package.xml to include that file.
+2) Developer commits those files.
+3) Pre-configured pipeline runs destrcutive changes.
+
+sfdx force:source:deploy --manifest package.xml --postdestructivechanges <file>  
+--predestructivechanges <file> --target-org orgName
+
+3.1) For destrcutive changes, generate manifest file from source
+sf project generate manifest -p force-app -n destructive-deploy-manifest
+3.2) sf project deploy start --target-org ORG_NAME -manifest destructive-deploy-manifest.xml 
+
 # Salesforce DX Project: Next Steps
 
 Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
