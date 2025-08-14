@@ -10,10 +10,9 @@ jobs:
       steps:
         - name: Install Salesforce CLI
           run: |
-              npm install @salesforce/cli --location=global
-              sf --version
-              echo "${{ secrets.USERNAME }}"
-              ls -lh
+            npm install @salesforce/cli --location=global
+            sf update stable
+            sf --version
         
         - name: Checkout source code
           uses: actions/checkout@v4
@@ -21,8 +20,7 @@ jobs:
         - name: Authenticate to ORG
           run: |
             ls  
-            sf org login jwt --username ${{ secrets.USERNAME }} --client-ID ${{ secrets.clientID }} --jwt-key-file salesforce.key -a orgName -d
-                
+            sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.clientID }} --jwt-key-file  salesforce.key --instance-url https://login.salesforce.com -a DevHub -s                
         - name: Run Deployment
           run: |
                 if [ -f destructiveChanges.xml ]; then
