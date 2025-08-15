@@ -31,7 +31,7 @@ jobs:
                    
                 else
                   echo "No destructive changes file found. Deploying non-destructively."
-                  sf project deploy start --manifest package.xml -o ${{ secrets.ORG }} --dry-run
+                  sf project deploy start --manifest package.xml -o ${{ secrets.ORG}} --dry-run
                   #sf project deploy start --manifest package.xml 
                 fi
         
