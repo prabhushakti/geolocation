@@ -1,24 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <types>
-        <members>AccountSearchController</members>
-        <name>ApexClass</name>
-    </types>
-    <types>
-        <members>AccountList</members>
-        <members>AccountLocator</members>
-        <members>AccountMap</members>
-        <members>AccountSearch</members>
-        <members>AccountsLoaded</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
-        <members>Account_Locator</members>
-        <name>CustomTab</name>
-    </types>
-    <types>
-        <members>GeoLocation</members>
-        <name>PermissionSet</name>
-    </types>
     <version>64.0</version>
 </Package>
