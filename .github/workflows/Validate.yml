@@ -1,4 +1,4 @@
-name: Validaton
+name: Validation
 on:
   pull_request:
     types: [opened]
@@ -10,15 +10,18 @@ jobs:
         - name: Install Salesforce CLI
           run: |
             npm install @salesforce/cli --location=global
+            sf update stable
             sf --version
-        
+            
         - name: Checkout source code
           uses: actions/checkout@v4
         
         - name: Authenticate to ORG
           run: |
-            sf org login jwt --username ${{ secrets.USERNAME }}--client-ID ${{ secrets.CLIENTID }} --jwt-key-file salesforce.key -a orgName -d
-                
+             sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.clientID }} --jwt-key-file  salesforce.key --instance-url https://login.salesforce.com -a DevHub -s
+             sf org list --all    
+             sf project deploy start --source-dir force-app --dry-run             
+         
         - name: Validate Deployments
           run: |
             if [ -f destructiveChanges.xml ]; then
@@ -28,8 +31,7 @@ jobs:
               #sfdx force:source:deploy --manifest manifest/deployPackage.xml --predestructivechanges manifest/destructiveChangesPre.xml --postdestructivechanges manifest/destructiveChangesPost.xml
             else
               echo "Performing normal deployment validation."
-              sf project deploy start -o {{ secrets.ORG }}  --source-dir force-app  --concise --dry-run
+              sf project deploy start --source-dir force-app  --concise --dry-run
             fi
 
         
-

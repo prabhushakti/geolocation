@@ -1,39 +1,41 @@
 name: Deployment
 on:
-  pull_request_review:
-    types: [submitted]
+  workflow_run:
+    workflows: ["Validation"]   # Name of your validation workflow
+    types:
+      - completed
 jobs:
-    Deploy_Project:
-      if: github.event.review.state == 'approved'
-      name: Deploying Code to ORG
-      runs-on: ubuntu-latest
-      steps:
-        - name: Install Salesforce CLI
-          run: |
-              npm install @salesforce/cli --location=global
-              sf --version
-              echo "${{ secrets.USERNAME }}"
-              ls -lh
-        
-        - name: Checkout source code
-          uses: actions/checkout@v4
-        
-        - name: Authenticate to ORG
-          run: |
-            ls  
-            sf org login jwt --username ${{ secrets.USERNAME }} --client-ID ${{ secrets.clientID }} --jwt-key-file salesforce.key -a orgName -d
-                
-        - name: Run Deployment
-          run: |
-                if [ -f destructiveChanges.xml ]; then
-                  echo "Destructive changes file found. Starting destrcutive deployment."
-                  sfdx force:source:deploy -p destructiveChanges.xml -u yourOrgAlias 
-                else
-                  echo "No destructive changes file found. Deploying non-destructively."
-                  sf project deploy start --manifest package.xml
-                fi
+  Deploy_Project:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: Deploying Code to ORG
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Salesforce CLI
+        run: |
+          npm install @salesforce/cli --location=global
+          sf update stable
+          sf --version
+      
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      
+      - name: Authenticate to ORG
+        run: |
+          ls  
+          sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.CLIENTID }} --jwt-key-file salesforce.key --instance-url https://login.salesforce.com -a "${{ secrets.ORG }}" -s
 
-        - name: Verify Deployment
-          run: sf project deploy status
-        
+      - name: Test Deployment
+        run: |
+          if [ -f destructiveChanges.xml ]; then
+            echo "Destructive changes file found. Starting destrcutive deployment."
+            #echo "Testing Destructive Deployment"
+            #sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChanges.xml -o ${{ secrets.ORG }} --dry-run
+            sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChangesPre.xml --post-destructive-changes destructiveChanges.xml -o Prod --dry-run 
+          else
+            echo "No destructive changes file found. Deploying non-destr
+            uctively."
+            #sf project deploy start --manifest package.xml -o ${{ secrets.ORG }} --dry-run
+            sf project deploy start --manifest package.xml -o ${{ secrets.ORG }} --dry-run
+          fi
+
 
