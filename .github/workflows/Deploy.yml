@@ -22,7 +22,7 @@ jobs:
       - name: Authenticate to ORG
         run: |
           ls  
-          sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.CLIENT_ID }} --jwt-key-file salesforce.key --instance-url https://login.salesforce.com -a "${{ secrets.ORG }}" -s
+          sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.CLIENTID }} --jwt-key-file salesforce.key --instance-url https://login.salesforce.com -a "${{ secrets.ORG }}" -s
 
       - name: Test Deployment
         run: |
@@ -31,9 +31,10 @@ jobs:
             #echo "Testing Destructive Deployment"
             sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChanges.xml -o ${{ secrets.ORG }} --dry-run
           else
-            echo "No destructive changes file found. Deploying non-destructively."
+            echo "No destructive changes file found. Deploying non-destr
+            uctively."
             #sf project deploy start --manifest package.xml -o ${{ secrets.ORG }} --dry-run
-            #sf project deploy start --manifest package.xml 
+            sf project deploy start --manifest package.xml -o ${{ secrets.ORG }} --dry-run
           fi
 
 
