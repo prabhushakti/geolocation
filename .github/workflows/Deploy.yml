@@ -3,36 +3,35 @@ on:
   pull_request_review:
     types: [submitted]
 jobs:
-    Deploy_Project:
-      if: github.event.review.state == 'approved'
-      name: Deploying Code to ORG
-      runs-on: ubuntu-latest
-      steps:
-        - name: Install Salesforce CLI
-          run: |
-            npm install @salesforce/cli --location=global
-            sf update stable
-            sf --version
-        
-        - name: Checkout source code
-          uses: actions/checkout@v4
-        
-        - name: Authenticate to ORG
-          run: |
-            ls  
-            sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.clientID }} --jwt-key-file  salesforce.key --instance-url https://login.salesforce.com -a ${{ ORG }} -s                
+  Deploy_Project:
+    if: github.event.review.state == 'approved'
+    name: Deploying Code to ORG
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Salesforce CLI
+        run: |
+          npm install @salesforce/cli --location=global
+          sf update stable
+          sf --version
+      
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      
+      - name: Authenticate to ORG
+        run: |
+          ls  
+          sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.CLIENT_ID }} --jwt-key-file salesforce.key --instance-url https://login.salesforce.com -a "${{ secrets.ORG }}" -s
 
-        - name: Test Deployment
-          run: |
-                if [ -f destructiveChanges.xml ]; then
-                  echo "Destructive changes file found. Starting destrcutive deployment."
-                  echo "Testing Destructive Deployment"
-                  sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChanges.xml -o ${{ secrets.ORG }} --dry-run
-                   
-                else
-                  echo "No destructive changes file found. Deploying non-destructively."
-                  sf project deploy start --manifest package.xml -o ${{ secrets.ORG}} --dry-run
-                  #sf project deploy start --manifest package.xml 
-                fi
+      - name: Test Deployment
+        run: |
+          if [ -f destructiveChanges.xml ]; then
+            echo "Destructive changes file found. Starting destrcutive deployment."
+            #echo "Testing Destructive Deployment"
+            sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChanges.xml -o ${{ secrets.ORG }} --dry-run
+          else
+            echo "No destructive changes file found. Deploying non-destructively."
+            #sf project deploy start --manifest package.xml -o ${{ secrets.ORG }} --dry-run
+            #sf project deploy start --manifest package.xml 
+          fi
         
 
