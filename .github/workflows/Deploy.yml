@@ -29,7 +29,8 @@ jobs:
           if [ -f destructiveChanges.xml ]; then
             echo "Destructive changes file found. Starting destrcutive deployment."
             #echo "Testing Destructive Deployment"
-            sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChanges.xml -o ${{ secrets.ORG }} --dry-run
+            #sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChanges.xml -o ${{ secrets.ORG }} --dry-run
+            sf project deploy start --manifest antiPackage.xml --pre-destructive-changes destructiveChangesPre.xml --post-destructive-changes destructiveChanges.xml -o Prod --dry-run 
           else
             echo "No destructive changes file found. Deploying non-destr
             uctively."
