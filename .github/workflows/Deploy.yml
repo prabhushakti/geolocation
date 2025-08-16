@@ -22,7 +22,7 @@ jobs:
       - name: Authenticate to ORG
         run: |
           ls  
-          sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.CLIENT_ID }} --jwt-key-file salesforce.key --instance-url https://login.salesforce.com -a "${{ secrets.ORG }}" -s
+          sf org login jwt --username ${{ secrets.USERNAME }} --client-id ${{ secrets.CLIENTID }} --jwt-key-file salesforce.key --instance-url https://login.salesforce.com -a "${{ secrets.ORG }}" -s
 
       - name: Test Deployment
         run: |
